@@ -14,14 +14,14 @@ episodes = data['episodes']
 env = cm.Maze()
 env.reset()
 
-# plot rewards
+# plot evolulção dos rewards
 plt.rcParams['figure.figsize'] = (16,8)
 plt.subplot(1, 2, 2)
 plt.gca().clear()
 plt.gca().set_box_aspect(.5)
 plt.title('Recompensa por episódios')
-plt.plot(avg_rewards, 'b', linewidth=2)
 plt.plot(rewards, 'r', alpha=0.3)
+plt.plot(avg_rewards, 'b', linewidth=2)
 plt.xlabel('Episódios')
 plt.ylabel('Recompensa')
 
