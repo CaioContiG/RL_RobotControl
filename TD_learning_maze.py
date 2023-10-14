@@ -199,60 +199,66 @@ class TDlearning(TDlearning):
         return np.sum(np.array(rewards))
     
 if __name__ == '__main__':
+    n_testes = 30
+    media_final = []
+    for i in range(n_testes):
+        print("##### TESTE ", i," #####")
 
+        # ARMANDO
+        plt.ion()
 
+        # parametros
+        parameters = {'episodes'  : 4000,
+                    'gamma'     : 0.99,
+                    'eps'       : 1.0e-2,
+                    'alpha'     : 0.5,
+                    'method'    : 'SARSA', #'SARSA' ou 'Q-learning'
+                    'save_Q'    : True,
+                    'load_Q'    : False,
+                    'q-file'    : 'qtable.npy',
+                    'plot'      : False}
 
-    # ARMANDO
-    plt.ion()
+        # TD algorithm
+        mc = TDlearning(parameters)
 
-    # parametros
-    parameters = {'episodes'  : 5000,
-                  'gamma'     : 0.99,
-                  'eps'       : 1.0e-2,
-                  'alpha'     : 0.5,
-                  'method'    : 'SARSA', #'SARSA' ou 'Q-learning'
-                  'save_Q'    : True,
-                  'load_Q'    : False,
-                  'q-file'    : 'qtable.npy',
-                  'plot'      : False}
-
-    # TD algorithm
-    mc = TDlearning(parameters)
-
-    # historico de recompensas
-    rewards = []
-    avg_rewards = []
-    if parameters['plot']:    
-        plt.figure(1)
-        plt.gcf().tight_layout()
-    
-    while mc.episode <= parameters['episodes']:
-        # roda um episodio
-        total_reward = mc.runEpisode()
+        # historico de recompensas
+        rewards = []
+        avg_rewards = []
+        if parameters['plot']:    
+            plt.figure(1)
+            plt.gcf().tight_layout()
         
-        # rewrds
-        rewards.append(total_reward)
-        # reward medio
-        avg_rewards.append(np.mean(rewards[-50:]))
-        desvio_padrao = np.std(avg_rewards[-250:])
-        
-        if parameters['plot']:
-            # plot rewards
-            plt.subplot(1, 2, 2)
-            plt.gca().clear()
-            plt.gca().set_box_aspect(.5)
-            plt.title('Recompensa por episódios')
-            plt.plot(avg_rewards, 'b', linewidth=2)
-            plt.plot(rewards, 'r', alpha=0.3)
-            plt.xlabel('Episódios')
-            plt.ylabel('Recompensa')
-            plt.show()
-            plt.pause(0.01)
+        while mc.episode <= parameters['episodes']:
+            # roda um episodio
+            total_reward = mc.runEpisode()
+            
+            # rewrds
+            rewards.append(total_reward)
+            # reward medio
+            avg_rewards.append(np.mean(rewards[-50:]))
+            desvio_padrao = np.std(avg_rewards[-500:])
+            
+            if parameters['plot']:
+                # plot rewards
+                plt.subplot(1, 2, 2)
+                plt.gca().clear()
+                plt.gca().set_box_aspect(.5)
+                plt.title('Recompensa por episódios')
+                plt.plot(avg_rewards, 'b', linewidth=2)
+                plt.plot(rewards, 'r', alpha=0.3)
+                plt.xlabel('Episódios')
+                plt.ylabel('Recompensa')
+                plt.show()
+                plt.pause(0.01)
 
-        if mc.episode%250 == 0 or mc.episode == 1:
-            print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1], 'DP: ', desvio_padrao)
+            if mc.episode%250 == 0 or mc.episode == 1:
+                print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1], 'DP: ', desvio_padrao)
 
-        np.save('RL_RobotControl/reward_file', rewards)
-        np.save('RL_RobotControl/avg_rewards_file', avg_rewards)
-    
-    plt.ioff()
+            np.save('RL_RobotControl/reward_file', rewards)
+            np.save('RL_RobotControl/avg_rewards_file', avg_rewards)
+        media_final.append(avg_rewards[-1])
+        params = str(parameters['method']) + "_" + str(parameters['gamma']) + "_" + str(parameters['eps']) + "_" + str(parameters['alpha'])
+        np.save('RL_RobotControl/rfinal_'+params, media_final)
+        print(media_final)
+        print('Media das medias: ', np.average(media_final), 'DP: ', np.std(media_final))
+        plt.ioff()

@@ -29,3 +29,9 @@ plt.ylabel('Recompensa')
 plt.subplot(1, 2, 1)
 plt.gca().clear()
 env.render(Q)
+
+# Print info da media final, colocar o nome do arquivo certo
+nome_arquivo = 'RL_RobotControl/rfinal_SARSA_0.99_0.01_0.5.npy'
+media_final = np.load(nome_arquivo)
+tamanho = len(media_final)
+print('Media de', tamanho , 'execucoes: ', np.average(media_final), 'DP: ', np.std(media_final))
