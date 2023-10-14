@@ -208,7 +208,7 @@ if __name__ == '__main__':
         plt.ion()
 
         # parametros
-        parameters = {'episodes'  : 4000,
+        parameters = {'episodes'  : 5000,
                     'gamma'     : 0.99,
                     'eps'       : 1.0e-2,
                     'alpha'     : 0.5,
