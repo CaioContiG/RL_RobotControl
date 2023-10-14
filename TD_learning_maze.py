@@ -206,7 +206,7 @@ if __name__ == '__main__':
     plt.ion()
 
     # parametros
-    parameters = {'episodes'  : 4000,
+    parameters = {'episodes'  : 5000,
                   'gamma'     : 0.99,
                   'eps'       : 1.0e-2,
                   'alpha'     : 0.5,
@@ -234,6 +234,7 @@ if __name__ == '__main__':
         rewards.append(total_reward)
         # reward medio
         avg_rewards.append(np.mean(rewards[-50:]))
+        desvio_padrao = np.std(avg_rewards[-250:])
         
         if parameters['plot']:
             # plot rewards
@@ -249,8 +250,9 @@ if __name__ == '__main__':
             plt.pause(0.01)
 
         if mc.episode%250 == 0 or mc.episode == 1:
-            print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1])
+            print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1], 'DP: ', desvio_padrao)
+
         np.save('RL_RobotControl/reward_file', rewards)
         np.save('RL_RobotControl/avg_rewards_file', avg_rewards)
-
+    
     plt.ioff()
