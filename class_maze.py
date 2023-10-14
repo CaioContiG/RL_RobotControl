@@ -11,7 +11,7 @@ from functools import partial
 
 NACTIONS = 9
 FONTSIZE = 12
-MAX_STEPS = 120
+MAX_STEPS = 200
 
 # ALINE #
 import sys
@@ -27,7 +27,7 @@ from src.F_formation_com_get_samples import F_formation
 class Maze(gym.Env):
     ########################################
     # construtor
-    def __init__(self, xlim=np.array([0.0, 20.0]), ylim=np.array([0.0, 20.0]), res=0.5, img='cave.png', alvo=np.array([[9.5, 9.5], [15,15]])):
+    def __init__(self, xlim=np.array([0.0, 20.0]), ylim=np.array([0.0, 20.0]), res=0.5, img='RL_RobotControl/cave.png', alvo=np.array([[9.5, 9.5], [15,15]])):
         
         # Aline #
         self.f_formation = F_formation()

@@ -33,9 +33,9 @@ class TDlearning(object):
         # log file (name depends on the method)
         self.logfile = parameters['q-file']
         if self.method == 'SARSA':
-            self.logfile = 'sarsa_' + self.logfile
+            self.logfile = 'RL_RobotControl/' + 'sarsa_' + self.logfile
         elif self.method == 'Q-learning':
-            self.logfile = 'qlearning_' + self.logfile
+            self.logfile = 'RL_RobotControl/' + 'qlearning_' + self.logfile
         else: print("Não salvou...")
 
         # reseta a politica
@@ -135,7 +135,7 @@ class TDlearning(TDlearning):
 class TDlearning(TDlearning):
     ##########################################
     # simula um episodio até o fim seguindo a politica corente
-    def rollout(self, max_iter=1000, render=False):
+    def rollout(self, max_iter=500, render=False):
         
         # inicia o ambiente (começa aleatoriamente)
         S = self.env.reset()
@@ -165,8 +165,7 @@ class TDlearning(TDlearning):
 
             # renderiza o ambiente            
             if render:
-                plt.subplot(1, 2, 1)
-                
+                plt.subplot(1, 2, 1)                
                 plt.gca().clear()
                 self.env.render(self.Q)
 
@@ -186,7 +185,12 @@ class TDlearning(TDlearning):
         self.policy = self.curr_policy()
 
         # gera um episodio seguindo a politica corrente
-        rewards = self.rollout(render=((self.episode-1)%100 == 0))
+        # render=((self.episode-1)%100 == 0)
+        # render=((self.episode-1)%1000 == 0)
+        if self.parameters['plot']:
+            rewards = self.rollout(render=((self.episode-1)%250 == 0))
+        else:
+            rewards = self.rollout()
         
         # salva a tabela Q
         if self.parameters['save_Q']:
@@ -202,23 +206,25 @@ if __name__ == '__main__':
     plt.ion()
 
     # parametros
-    parameters = {'episodes'  : 5000,
+    parameters = {'episodes'  : 4000,
                   'gamma'     : 0.99,
                   'eps'       : 1.0e-2,
                   'alpha'     : 0.5,
                   'method'    : 'SARSA', #'SARSA' ou 'Q-learning'
                   'save_Q'    : True,
                   'load_Q'    : False,
-                  'q-file'    : 'qtable.npy',}
+                  'q-file'    : 'qtable.npy',
+                  'plot'      : False}
 
     # TD algorithm
     mc = TDlearning(parameters)
 
     # historico de recompensas
     rewards = []
-    avg_rewards = []    
-    plt.figure(1)
-    plt.gcf().tight_layout()
+    avg_rewards = []
+    if parameters['plot']:    
+        plt.figure(1)
+        plt.gcf().tight_layout()
     
     while mc.episode <= parameters['episodes']:
         # roda um episodio
@@ -229,17 +235,22 @@ if __name__ == '__main__':
         # reward medio
         avg_rewards.append(np.mean(rewards[-50:]))
         
-        # plot rewards
-        plt.subplot(1, 2, 2)
-        plt.gca().clear()
-        plt.gca().set_box_aspect(.5)
-        plt.title('Recompensa por episódios')
-        plt.plot(avg_rewards, 'b', linewidth=2)
-        plt.plot(rewards, 'r', alpha=0.3)
-        plt.xlabel('Episódios')
-        plt.ylabel('Recompensa')
+        if parameters['plot']:
+            # plot rewards
+            plt.subplot(1, 2, 2)
+            plt.gca().clear()
+            plt.gca().set_box_aspect(.5)
+            plt.title('Recompensa por episódios')
+            plt.plot(avg_rewards, 'b', linewidth=2)
+            plt.plot(rewards, 'r', alpha=0.3)
+            plt.xlabel('Episódios')
+            plt.ylabel('Recompensa')
+            plt.show()
+            plt.pause(0.01)
 
-        plt.show()
-        plt.pause(.1)
+        if mc.episode%250 == 0 or mc.episode == 1:
+            print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1])
+        np.save('RL_RobotControl/reward_file', rewards)
+        np.save('RL_RobotControl/avg_rewards_file', avg_rewards)
 
     plt.ioff()
