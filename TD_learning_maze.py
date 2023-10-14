@@ -199,9 +199,9 @@ class TDlearning(TDlearning):
         return np.sum(np.array(rewards))
     
 if __name__ == '__main__':
-    n_testes = 30
+    n_execucoes = 30
     media_final = []
-    for i in range(n_testes):
+    for i in range(n_execucoes):
         print("##### TESTE ", i," #####")
 
         # ARMANDO
