@@ -33,9 +33,9 @@ class TDlearning(object):
         # log file (name depends on the method)
         self.logfile = parameters['q-file']
         if self.method == 'SARSA':
-            self.logfile = 'RL_RobotControl/' + 'sarsa_' + self.logfile
+            self.logfile = 'log_npy/' + 'sarsa_' + self.logfile
         elif self.method == 'Q-learning':
-            self.logfile = 'RL_RobotControl/' + 'qlearning_' + self.logfile
+            self.logfile = 'log_npy/' + 'qlearning_' + self.logfile
         else: print("Não salvou...")
 
         # reseta a politica
@@ -209,7 +209,7 @@ if __name__ == '__main__':
 
         # parametros
         parameters = {'episodes'  : 5000,
-                    'gamma'     : 0.99,
+                    'gamma'     : 0.80,
                     'eps'       : 1.0e-2,
                     'alpha'     : 0.5,
                     'method'    : 'SARSA', #'SARSA' ou 'Q-learning'
@@ -251,14 +251,14 @@ if __name__ == '__main__':
                 plt.show()
                 plt.pause(0.01)
 
-            if mc.episode%250 == 0 or mc.episode == 1:
+            if mc.episode%500 == 0 or mc.episode == 1:
                 print("Episode: ", mc.episode, ", Avg rewards: ", avg_rewards[-1], 'DP: ', desvio_padrao)
 
-            np.save('RL_RobotControl/reward_file', rewards)
-            np.save('RL_RobotControl/avg_rewards_file', avg_rewards)
+            np.save('log_npy/reward_file', rewards)
+            np.save('log_npy/avg_rewards_file', avg_rewards)
         media_final.append(avg_rewards[-1])
         params = str(parameters['method']) + "_" + str(parameters['gamma']) + "_" + str(parameters['eps']) + "_" + str(parameters['alpha'])
-        np.save('RL_RobotControl/rfinal_'+params, media_final)
+        np.save('log_npy/rfinal_'+params, media_final)
         print(media_final)
         print('Media das medias: ', np.average(media_final), 'DP: ', np.std(media_final))
         plt.ioff()

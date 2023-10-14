@@ -4,9 +4,9 @@ import class_maze as cm
 import seaborn as sns
 
 # Carrega dados
-data = np.load('RL_RobotControl/sarsa_qtable.npy')
-rewards = np.load('RL_RobotControl/reward_file.npy')
-avg_rewards = np.load('RL_RobotControl/avg_rewards_file.npy')
+data = np.load('log_npy/sarsa_qtable.npy')
+rewards = np.load('log_npy/reward_file.npy')
+avg_rewards = np.load('log_npy/avg_rewards_file.npy')
 Q = data['Q']
 episodes = data['episodes']
 
@@ -31,7 +31,8 @@ plt.gca().clear()
 env.render(Q)
 
 # Print info da media final, colocar o nome do arquivo certo
-nome_arquivo = 'RL_RobotControl/rfinal_SARSA_0.99_0.01_0.5.npy'
+nome_arquivo = 'log_npy/rfinal_SARSA_0.99_0.01_0.5.npy'
 media_final = np.load(nome_arquivo)
 tamanho = len(media_final)
+print(media_final)
 print('Media de', tamanho , 'execucoes: ', np.average(media_final), 'DP: ', np.std(media_final))
